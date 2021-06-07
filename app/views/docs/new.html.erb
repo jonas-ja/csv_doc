@@ -1,0 +1,13 @@
+<div class="text-center">
+  <h2>Subir archivo CSV</h2>
+  <div class="alert alert-primary" role="alert">
+    Subir un archivo CSV con datos de nombre, correo_electronico, telefono.
+  </div>
+</div>
+<div class="text-center">
+  <%= form_tag(docs_path(), { :multipart => true }) do %>
+    <%= label_tag(:file, "Subir archivo CSV:") %>
+    <%= file_field_tag "file" %>
+    <%= submit_tag("Subir") %>
+  <% end %>
+</div>

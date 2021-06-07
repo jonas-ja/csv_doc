@@ -18,20 +18,17 @@ class DocsController < ApplicationController
       lines.each_with_index do |l1, index1|
         @new_hash.each_with_index do |l2, index2|
           if index1 != index2
-            if (l1[:nombre].to_s == l2[:nombre].to_s) || (l1[:correo_electronico].to_s == l2[:correo_electronico].to_s) || (l1[:telefono].to_s == l2[:telefono].to_s)
+            if (lines[index1][:nombre].to_s == @new_hash[index2][:nombre].to_s) && (lines[index1][:correo_electronico].to_s == @new_hash[index2][:correo_electronico].to_s) && (lines[index1][:telefono].to_s == @new_hash[index2][:telefono].to_s)
+              @new_hash.delete_at(index2)
+            end
 
+            if is_valid_email?(@new_hash[index2][:correo_electronico]).nil?
+              @new_hash.delete_at(index2)
+            end
+
+            if (lines[index1][:nombre].to_s == @new_hash[index2][:nombre].to_s) || (lines[index1][:correo_electronico].to_s == @new_hash[index2][:correo_electronico].to_s) || (lines[index1][:telefono].to_s == @new_hash[index2][:telefono].to_s)
               @new_hash[index1][:flag] = 0
               @new_hash[index2][:flag] = 0
-            end
-
-            if is_valid_email?(l2[:correo_electronico]).nil?
-              @new_hash.delete(l2)
-            end
-
-            if (l1[:nombre].to_s == l2[:nombre].to_s) && (l1[:correo_electronico].to_s == l2[:correo_electronico].to_s) && (l1[:telefono].to_s == l2[:telefono].to_s)
-
-              @new_hash.delete(l2)
-
             end
           end
         end
@@ -41,8 +38,13 @@ class DocsController < ApplicationController
     # end
   end
 
-  def is_valid_email? email
-    email =~ VALID_EMAIL_REGEX
-  end
+  private
+    def is_valid_email? email
+      email =~ VALID_EMAIL_REGEX
+    end
+
+    def deep_copy(o)
+      Marshal.load(Marshal.dump(o))
+    end
 
 end
